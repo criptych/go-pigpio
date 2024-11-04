@@ -130,6 +130,43 @@ func (i *I2C) WriteRegisterBlock(register int, data []byte) error {
 	return nil
 }
 
+func (i *I2C) ReadI2CBlock(register int, length int) ([]byte, error) {
+	var e error
+	var r int
+	var d []byte
+
+	r, e = i.pi.socket.SendCommand(cmdI2CReadI2CBlock, i.handle, register, convertToBytes(length))
+
+	if e != nil || r < 0 {
+		return nil, newPiError(r, e, "I2C.ReadI2CBlock(handle: %d, bus: %d, address: %d, register: %d)",
+			i.handle, i.bus, i.address, register)
+	}
+
+	if r > 0 {
+		d, e = i.pi.socket.Read(r)
+		if e != nil {
+			return nil, newPiError(0, e, "I2C.ReadI2CBlock(handle: %d, bus: %d, address: %d, register: %d, len: %d)",
+				i.handle, i.bus, i.address, register, r)
+		}
+
+		return d, nil
+	}
+
+	return []byte{}, nil
+}
+
+func (i *I2C) WriteI2CBlock(register int, data []byte) error {
+	if len(data) > 0 {
+		r, e := i.pi.socket.SendCommand(cmdI2CWriteI2CBlock, i.handle, register, data)
+		if e != nil || r < 0 {
+			return newPiError(r, e, "I2C.WriteI2CBlock(handle: %d, bus: %d, address: %d, register: %d, data: %v)",
+				i.handle, i.bus, i.address, register, data)
+		}
+	}
+
+	return nil
+}
+
 func (i *I2C) ReadDevice(count int) ([]byte, error) {
 	var e error
 	var r int

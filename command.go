@@ -59,6 +59,8 @@ const (
 	cmdI2CWriteWordData  Command = 64
 	cmdI2CReadBlockData  Command = 65
 	cmdI2CWriteBlockData Command = 66
+	cmdI2CReadI2CBlock   Command = 67
+	cmdI2CWriteI2CBlock  Command = 68
 	cmdI2CProcessCall    Command = 69
 	cmdSPIOpen           Command = 71
 	cmdSPIClose          Command = 72
