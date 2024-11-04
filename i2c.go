@@ -120,7 +120,7 @@ func (i *I2C) ReadRegisterBlock(register int) ([]byte, error) {
 
 func (i *I2C) WriteRegisterBlock(register int, data []byte) error {
 	if len(data) > 0 {
-		r, e := i.pi.socket.SendCommand(cmdI2CReadBlockData, i.handle, register, data)
+		r, e := i.pi.socket.SendCommand(cmdI2CWriteBlockData, i.handle, register, data)
 		if e != nil || r < 0 {
 			return newPiError(r, e, "I2C.WriteRegisterBlock(handle: %d, bus: %d, address: %d, register: %d, data: %v)",
 				i.handle, i.bus, i.address, register, data)
